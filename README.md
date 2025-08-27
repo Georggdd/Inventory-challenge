@@ -5,10 +5,10 @@ Prueba técnica completa con **FastAPI** (Python), **React (Vite)** y **PostgreS
 - Historial de movimientos de stock.
 - API REST con **FastAPI** y **SQLAlchemy**.
 - **PostgreSQL** como base de datos (vía Docker).
-- **JWT** opcional (bonus) y **tests** básicos de API con `pytest` (bonus).
+- **JWT** y **tests** básicos de API con `pytest`.
 - Frontend en **React (Vite)**.
 
-> Diseñado para correr rápido con `docker compose` (solo la base de datos) y dos terminales locales para backend y frontend. También puedes dockerizar todo si quieres, pero aquí prima la claridad y velocidad de ejecución.
+> Diseñado para correr rápido con `docker compose` (solo la base de datos) y dos terminales locales para backend y frontend. 
 
 ---
 
@@ -24,10 +24,14 @@ cp .env.example .env
 ```
 Modifica lo que necesites. Por defecto: usuario `postgres`/`postgres`, db `inventory` en `localhost:5432`.
 
+Para habilitar autenticación JWT:
+
+REQUIRE_AUTH=true
+JWT_SECRET=un_secreto_largo
+
 ## 3) Arrancar PostgreSQL con Docker
 ```bash
 docker compose up -d db
-# Espera unos segundos a que la base de datos esté lista
 ```
 
 ## 4) Backend (FastAPI)
@@ -35,11 +39,10 @@ En una terminal:
 ```bash
 cd backend
 python -m venv .venv
-source .venv/bin/activate  # en Windows: .venv\Scripts\activate
+source .venv\Scripts\activate #Windows
 pip install -r requirements.txt
 
 # Crea tablas y datos de ejemplo (usuarios y productos)
-# Se ejecuta automáticamente al levantar, pero puedes forzarlo con:
 python -m app.seed
 
 # Arrancar API
@@ -47,7 +50,7 @@ uvicorn app.main:app --reload
 ```
 Por defecto expone en `http://localhost:8000` y docs en `http://localhost:8000/docs`.
 
-### Tests (bonus)
+### Tests 
 ```bash
 pytest -q
 ```
@@ -61,24 +64,106 @@ pnpm dev      # o: npm run dev
 ```
 Vite sirve la app en `http://localhost:5173`.
 
-## 6) Flujos en la UI
-- **Inventario**: ver SKU, EAN13, nombre y cantidad.
-- **Actualizar stock**: dos opciones en cada fila:
-  - **Ajustar**: establece una cantidad absoluta (p.ej., 120). Registra movimiento tipo `ADJUST`.
-  - **Movimiento**: aplica un delta positivo/negativo (p.ej., +20 entrada, -5 salida). Registra `IN`/`OUT`.
-- **Historial**: lista de movimientos más recientes con filtros por producto.
+## 6) Mini-flujo de prueba de la API (Postman)
 
-## 7) Auth (bonus, opcional)
-Por defecto **NO es obligatorio**. Actívalo poniendo en `.env`:
-```
-REQUIRE_AUTH=true
-JWT_SECRET=un_secreto_largo
-```
-Endpoints:
-- `POST /auth/register` { email, password }
-- `POST /auth/login` { email, password } → `access_token` (Bearer)
 
-## 8) Estructura
+## Verificar que el servidor está vivo
+Método: GET
+URL: http://localhost:8000/health
+Body: ninguno
+
+Respuesta esperada:
+{"status":"ok"}
+
+
+## Obtener token (si auth activada)
+Método: POST
+URL: http://localhost:8000/auth/login
+Body (JSON):
+{
+  "username": "admin@example.com",
+  "password": "admin123"
+}
+
+Respuesta esperada:
+{
+  "access_token": "<tu_token>",
+  "token_type": "bearer"
+}
+
+
+## Listar productos
+Método: GET
+URL: http://localhost:8000/api/products
+Headers:
+Authorization: Bearer <tu_token>
+
+
+Respuesta: array con productos existentes.
+
+
+## Crear un producto
+Método: POST
+URL: http://localhost:8000/api/products
+Headers: igual que antes
+Body (JSON):
+{
+  "sku": "PROD001",
+  "ean13": "1234567890123",
+  "name": "Producto de prueba",
+  "stock_qty": 50
+}
+
+Respuesta: producto creado con id.
+
+
+## Ajustar stock
+Método: PATCH
+URL: http://localhost:8000/api/products/<product_id>/stock
+Body (JSON):
+{
+  "quantity": 10,
+  "reason": "Ajuste inicial"
+}
+
+Respuesta: detalles del movimiento de stock:
+{
+  "id": 1,
+  "product_id": 4,
+  "delta": -40,
+  "qty_after": 10,
+  "reason": "Ajuste inicial",
+  "timestamp": "2025-08-27T12:34:56.789Z"
+}
+
+
+## Listar movimientos
+Método: GET
+URL: http://localhost:8000/api/movements
+Respuesta: lista con todos los movimientos de stock.
+
+
+## 7) Flujos en la UI
+```
+Inventario: ver SKU, EAN13, nombre y cantidad.
+Actualizar stock:
+- Ajustar: establece cantidad absoluta → registra movimiento ADJUST.
+- Movimiento: aplica delta positivo/negativo → registra IN/OUT.
+Historial: lista de movimientos recientes, con filtros por producto.
+
+```
+## 8) Endpoints principales 
+```
+- GET /api/products
+- POST /api/products
+- PATCH /api/products/{id}/stock (ajuste absoluto, crea movimiento)
+- GET /api/movements?product_id=&limit=
+
+Todos requieren token JWT (excepto /health).
+
+```
+
+## 9) Estructura
 ```
 inventory-challenge/
 ├─ backend/
@@ -93,6 +178,7 @@ inventory-challenge/
 │  │  └─ seed.py
 │  ├─ tests/
 │  │  └─ test_api.py
+│  │  └─ test_db.py
 │  └─ requirements.txt
 ├─ frontend/
 │  ├─ index.html
@@ -111,14 +197,3 @@ inventory-challenge/
 └─ .env  (lo creas tú)
 ```
 
-## 9) Endpoints principales
-- `GET /api/products`
-- `PATCH /api/products/{id}/stock`  (ajuste absoluto)
-- `POST /api/movements`  (delta positivo/negativo)
-- `GET /api/movements?product_id=&limit=`
-
-## 10) Notas
-- Los tests usan SQLite en memoria para ir rápido.
-- La API valida EAN13 sencillamente (13 dígitos).
-- Todo el código es didáctico y está documentado.
-- Si quieres dockerizar también backend/frontend, añade servicios al `docker-compose.yml` o crea Dockerfiles (dejé comentarios en el README y en el código para ello).

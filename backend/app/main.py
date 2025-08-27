@@ -12,7 +12,7 @@ from .deps import RequireAuth
 
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173")
 
-# Create tables at startup (for the test simplicity)
+# Create tables at startup (for simplicity in testing)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Inventory API", version="0.1.0")
@@ -33,15 +33,15 @@ def health():
 
 # ------- Products -------
 @app.get("/api/products", response_model=list[ProductOut], tags=["inventory"])
-def api_list_products(db: Session = Depends(get_db), _auth=Depends(RequireAuth())):
+def api_list_products(db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
     return list_products(db)
 
 @app.post("/api/products", response_model=ProductOut, tags=["inventory"])
-def api_create_product(payload: ProductCreate, db: Session = Depends(get_db), _auth=Depends(RequireAuth())):
+def api_create_product(payload: ProductCreate, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
     return create_product(db, sku=payload.sku, ean13=payload.ean13, name=payload.name, stock_qty=payload.stock_qty)
 
 @app.patch("/api/products/{product_id}/stock", response_model=MovementOut, tags=["inventory"])
-def api_adjust_stock(product_id: int, payload: StockAdjust, db: Session = Depends(get_db), _auth=Depends(RequireAuth())):
+def api_adjust_stock(product_id: int, payload: StockAdjust, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
     product = get_product(db, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
@@ -50,7 +50,7 @@ def api_adjust_stock(product_id: int, payload: StockAdjust, db: Session = Depend
 
 # ------- Movements -------
 @app.post("/api/movements", response_model=MovementOut, tags=["inventory"])
-def api_create_movement(payload: MovementCreate, db: Session = Depends(get_db), _auth=Depends(RequireAuth())):
+def api_create_movement(payload: MovementCreate, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
     product = get_product(db, payload.product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
@@ -59,5 +59,5 @@ def api_create_movement(payload: MovementCreate, db: Session = Depends(get_db), 
     return movement
 
 @app.get("/api/movements", response_model=list[MovementOut], tags=["inventory"])
-def api_list_movements(product_id: int | None = None, limit: int = 100, db: Session = Depends(get_db), _auth=Depends(RequireAuth())):
+def api_list_movements(product_id: int | None = None, limit: int = 100, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
     return list_movements(db, product_id=product_id, limit=limit)
