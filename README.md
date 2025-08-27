@@ -100,9 +100,10 @@ Respuesta esperada:
 ```
 
 ### Obtener token (si auth activada)
-Método: POST
-URL: http://localhost:8000/auth/login
-Body (JSON):
+```
+- Método: POST
+- URL: http://localhost:8000/auth/login
+- Body (JSON):
 {
   "username": "admin@example.com",
   "password": "admin123"
@@ -113,22 +114,24 @@ Respuesta esperada:
   "access_token": "<tu_token>",
   "token_type": "bearer"
 }
-
+```
 
 ### Listar productos
-Método: GET
-URL: http://localhost:8000/api/products
-Headers:
-Authorization: Bearer <tu_token>
+```
+- Método: GET
+- URL: http://localhost:8000/api/products
+- Headers:
+     Authorization: Bearer <tu_token>
 
 
 Respuesta: array con productos existentes.
-
+```
 
 ### Crear un producto
-Método: POST
-URL: http://localhost:8000/api/products
-Headers: igual que antes
+```
+- Método: POST
+- URL: http://localhost:8000/api/products
+- Headers: igual que antes:
 Body (JSON):
 {
   "sku": "PROD001",
@@ -138,12 +141,13 @@ Body (JSON):
 }
 
 Respuesta: producto creado con id.
-
+```
 
 ### Ajustar stock
-Método: PATCH
-URL: http://localhost:8000/api/products/<product_id>/stock
-Body (JSON):
+```
+- Método: PATCH
+- URL: http://localhost:8000/api/products/<product_id>/stock
+- Body (JSON):
 {
   "quantity": 10,
   "reason": "Ajuste inicial"
@@ -158,13 +162,15 @@ Respuesta: detalles del movimiento de stock:
   "reason": "Ajuste inicial",
   "timestamp": "2025-08-27T12:34:56.789Z"
 }
-
+```
 
 ### Listar movimientos
-Método: GET
-URL: http://localhost:8000/api/movements
-Respuesta: lista con todos los movimientos de stock.
+```
+- Método: GET
+- URL: http://localhost:8000/api/movements
 
+Respuesta: lista con todos los movimientos de stock.
+```
 
 ## 7) Flujos en la UI
 ```
