@@ -18,11 +18,11 @@ Prueba técnica completa con **FastAPI** (Python), **React (Vite)** y **PostgreS
 - Docker y Docker Compose
 
 ## 2) Variables de entorno
-Copia el ejemplo:
+Copiar el ejemplo:
 ```bash
 cp .env.example .env
 ```
-Modifica lo que necesites. Por defecto: usuario `postgres`/`postgres`, db `inventory` en `localhost:5432`.
+Modificar lo que se necesite. Por defecto: usuario `postgres`/`postgres`, db `inventory` en `localhost:5432`.
 
 Para habilitar autenticación JWT:
 
@@ -53,14 +53,14 @@ uvicorn app.main:app --reload
 El backend se levanta en http://127.0.0.1:8000/.
 
 ⚠️ Nota importante:
-Si accedes a la raíz (/), verás un mensaje de error {"detail": "Not Found"}.
+Si se accede a la raíz (/), saldrá un mensaje de error {"detail": "Not Found"}.
 Esto es normal, ya que no hay ninguna ruta definida en /.
 
-Para comprobar que el backend funciona correctamente, abre la documentación interactiva en:
+Para comprobar que el backend funciona correctamente, abrir la documentación interactiva en:
 
 👉 http://127.0.0.1:8000/docs
 
-Allí podrás probar todas las rutas de la API (/api/products, /api/movements, etc.).
+Allí se podrán probar todas las rutas de la API (/api/products, /api/movements, etc.).
 
 ### Tests 
 ```bash
@@ -74,7 +74,7 @@ cd frontend
 npm install
 npm run dev
 ```
-Vite sirve la app en `http://localhost:5173`.
+Vite ejecuta la app en `http://localhost:5173`.
 
 ## 6) Mini-flujo de prueba de la API (Postman)
 
