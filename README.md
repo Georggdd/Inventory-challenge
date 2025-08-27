@@ -20,7 +20,7 @@ Prueba técnica completa con **FastAPI** (Python), **React (Vite)** y **PostgreS
 ## 2) Variables de entorno
 Copiar el ejemplo:
 ```bash
-cp .env.example .env
+.env.example 
 ```
 Modificar lo que se necesite. Por defecto: usuario `postgres`/`postgres`, db `inventory` en `localhost:5432`.
 
