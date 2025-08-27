@@ -69,7 +69,7 @@ Para comprobar que el backend funciona correctamente, abrir la documentación in
 
 Allí se podrán probar todas las rutas de la API (/api/products, /api/movements, etc.).
 
-<u> Tests <u>
+**Tests**
 Ejecutar los tests con:
 
 ```bash
