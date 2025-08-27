@@ -124,15 +124,15 @@ Respuesta esperada:
      Authorization: Bearer <tu_token>
 
 
-Respuesta: array con productos existentes.
+Respuesta esperada: array con productos existentes.
 ```
 
 ### Crear un producto
 ```
 - Método: POST
 - URL: http://localhost:8000/api/products
-- Headers: igual que antes:
-Body (JSON):
+- Headers: igual que antes
+- Body (JSON):
 {
   "sku": "PROD001",
   "ean13": "1234567890123",
@@ -140,7 +140,7 @@ Body (JSON):
   "stock_qty": 50
 }
 
-Respuesta: producto creado con id.
+Respuesta esperada: producto creado con id.
 ```
 
 ### Ajustar stock
@@ -153,7 +153,7 @@ Respuesta: producto creado con id.
   "reason": "Ajuste inicial"
 }
 
-Respuesta: detalles del movimiento de stock:
+Respuesta esperada: detalles del movimiento de stock:
 {
   "id": 1,
   "product_id": 4,
@@ -169,7 +169,7 @@ Respuesta: detalles del movimiento de stock:
 - Método: GET
 - URL: http://localhost:8000/api/movements
 
-Respuesta: lista con todos los movimientos de stock.
+Respuesta esperada: lista con todos los movimientos de stock.
 ```
 
 ## 7) Flujos en la UI
