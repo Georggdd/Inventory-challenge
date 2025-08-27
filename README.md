@@ -90,13 +90,14 @@ Vite ejecuta la app en `http://localhost:5173`.
 
 
 ### Verificar que el servidor está vivo
-Método: GET
-URL: http://localhost:8000/health
-Body: ninguno
+```
+- Método: GET
+- URL: http://localhost:8000/health
+- Body: ninguno
 
 Respuesta esperada:
 {"status":"ok"}
-
+```
 
 ### Obtener token (si auth activada)
 Método: POST
