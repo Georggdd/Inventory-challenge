@@ -41,7 +41,7 @@ docker compose up -d db
 cd backend
 python -m venv .venv
 ```
-# Activar entorno virtual en Windows
+### Activar entorno virtual en Windows
 
 ```bash
 source .venv\Scripts\activate
@@ -69,7 +69,7 @@ Para comprobar que el backend funciona correctamente, abrir la documentación in
 
 Allí se podrán probar todas las rutas de la API (/api/products, /api/movements, etc.).
 
-Tests
+# Tests
 Ejecutar los tests con:
 
 ```bash
