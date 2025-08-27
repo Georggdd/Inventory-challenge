@@ -95,7 +95,7 @@ Vite ejecuta la app en `http://localhost:5173`.
 - URL: http://localhost:8000/health
 - Body: ninguno
 
-**Respuesta esperada:**
+Respuesta esperada:
 {"status":"ok"}
 ```
 
