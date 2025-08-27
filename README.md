@@ -14,7 +14,7 @@ Prueba técnica completa con **FastAPI** (Python), **React (Vite)** y **PostgreS
 
 ## 1) Requisitos
 - Python 3.11+
-- Node 18+ y pnpm o npm
+- Node 18+ y npm
 - Docker y Docker Compose
 
 ## 2) Variables de entorno
