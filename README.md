@@ -42,10 +42,10 @@ python -m venv .venv
 source .venv\Scripts\activate #Windows
 pip install -r requirements.txt
 
-## Crea tablas y datos de ejemplo (usuarios y productos)
+### Crea tablas y datos de ejemplo (usuarios y productos)
 python -m app.seed
 
-## Arrancar API
+### Arrancar API
 Para arrancar el servidor FastAPI:
 
 ```bash
