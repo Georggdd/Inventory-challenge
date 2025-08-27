@@ -1,15 +1,19 @@
-// Componente React para mostrar y filtrar el historial de movimientos de inventario.
+/**
+ * Componente React para mostrar y filtrar el historial de movimientos de inventario.
+ * Permite filtrar por ID de producto, establecer un límite de resultados y refrescar manualmente.
+ */
 
 import React, { useEffect, useState } from "react"
 import { apiGet } from "../api"
 
 export default function Movements() {
-  const [items, setItems] = useState([])
-  const [productId, setProductId] = useState("")
-  const [limit, setLimit] = useState(50)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [items, setItems] = useState([])      // Lista de movimientos cargados desde la API
+  const [productId, setProductId] = useState("") // Filtro por product_id
+  const [limit, setLimit] = useState(50)      // Número máximo de registros a mostrar
+  const [loading, setLoading] = useState(true) // Estado de carga
+  const [error, setError] = useState("")       // Estado de error en la carga
 
+  // Función para cargar movimientos desde la API
   const load = async () => {
     try {
       setLoading(true)
@@ -19,22 +23,27 @@ export default function Movements() {
       const data = await apiGet(`/api/movements?${query.toString()}`)
       setItems(data)
     } catch (e) {
-      setError(e.message)
+      setError(e.message)  // Guardar mensaje de error
     } finally {
-      setLoading(false)
+      setLoading(false)    // Desactivar estado de carga
     }
   }
 
+  // Cargar datos al montar el componente
   useEffect(() => { load() }, [])
 
   return (
     <div style={{marginTop:24}}>
       <h3>Historial de movimientos</h3>
+
+      {/* Filtros y controles */}
       <div style={{display:"flex", gap:8, marginBottom:8}}>
         <input placeholder="Filtrar por product_id" value={productId} onChange={e => setProductId(e.target.value)} />
         <input placeholder="Límite" type="number" value={limit} onChange={e => setLimit(parseInt(e.target.value||"0",10))} />
         <button onClick={load}>Refrescar</button>
       </div>
+
+      {/* Estados: cargando, error o tabla de resultados */}
       {loading && <div>Cargando movimientos...</div>}
       {error && <div style={{color:"crimson"}}>Error: {error}</div>}
       {!loading && !error && (

@@ -17,21 +17,26 @@ from .database import get_db
 from .models import User
 from .schemas import Token, UserCreate, UserOut
 
-JWT_SECRET = os.getenv("JWT_SECRET", "change_this_to_a_long_random_secret")
-JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
-REQUIRE_AUTH = os.getenv("REQUIRE_AUTH", "false").lower() == "true"
+# Configuración de JWT y autenticación
+JWT_SECRET = os.getenv("JWT_SECRET", "change_this_to_a_long_random_secret")  # Clave secreta para firmar tokens
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")  # Algoritmo de encriptación del token
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))  # Expiración del token en minutos
+REQUIRE_AUTH = os.getenv("REQUIRE_AUTH", "false").lower() == "true"  # Determina si la autenticación es obligatoria
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")  # Contexto para encriptar contraseñas
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")  # URL de login para OAuth2
 
+# --- Funciones de seguridad ---
 def hash_password(password: str) -> str:
+    """Genera un hash seguro para la contraseña"""
     return pwd_context.hash(password)
 
 def verify_password(plain: str, hashed: str) -> bool:
+    """Verifica si la contraseña ingresada coincide con el hash almacenado"""
     return pwd_context.verify(plain, hashed)
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    """Crea un token JWT con información del usuario y fecha de expiración"""
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
@@ -41,6 +46,7 @@ def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     db: Session = Depends(get_db),
 ) -> User:
+    """Devuelve el usuario actual según el token JWT, lanza error si no es válido"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -59,17 +65,21 @@ def get_current_user(
     return user
 
 def maybe_auth_dependency():
-    # Devuelve una dependencia que aplica la autenticación solo si REQUIRE_AUTH=true
+    """
+    Devuelve una dependencia de autenticación para las rutas.
+    Si REQUIRE_AUTH=True, fuerza login; si no, permite acceso abierto.
+    """
     def _noop():
         return None
     return Depends(get_current_user) if REQUIRE_AUTH else Depends(_noop)
 
-# --- Helpers de rutas ---
+# --- Rutas de autenticación ---
 from fastapi import APIRouter
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/register", response_model=UserOut)
 def register(payload: UserCreate, db: Session = Depends(get_db)):
+    """Registra un nuevo usuario con email y contraseña"""
     if db.query(User).filter(User.email == payload.email).first():
         raise HTTPException(status_code=400, detail="Email ya registrado")
     user = User(email=payload.email, password_hash=hash_password(payload.password))
@@ -80,6 +90,7 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """Inicia sesión: verifica credenciales y devuelve un token JWT"""
     user = db.query(User).filter(User.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.password_hash):
         raise HTTPException(status_code=400, detail="Email o contraseña incorrectos")

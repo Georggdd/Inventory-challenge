@@ -4,4 +4,5 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 
+// Crear el root y renderizar el componente principal
 createRoot(document.getElementById('root')).render(<App />)

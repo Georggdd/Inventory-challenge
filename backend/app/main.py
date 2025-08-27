@@ -1,5 +1,6 @@
 """
 Define la API de inventario: rutas para productos y movimientos, gestión de stock y autenticación.
+Incluye endpoints para listar, crear y ajustar productos, así como para registrar y consultar movimientos.
 """
 
 import os
@@ -21,6 +22,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Inventory API", version="0.1.0")
 
+# Configura CORS para permitir peticiones desde el frontend definido en CORS_ORIGINS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in CORS_ORIGINS.split(",")],
@@ -29,23 +31,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Incluye el router de autenticación
 app.include_router(auth_router)
 
 @app.get("/health")
 def health():
+    # Endpoint de salud para comprobar que la API está funcionando
     return {"status": "ok"}
 
 # ------- Productos -------
 @app.get("/api/products", response_model=list[ProductOut], tags=["inventory"])
 def api_list_products(db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
+    # Lista todos los productos disponibles
     return list_products(db)
 
 @app.post("/api/products", response_model=ProductOut, tags=["inventory"])
 def api_create_product(payload: ProductCreate, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
+    # Crea un nuevo producto con SKU, EAN13, nombre y stock inicial
     return create_product(db, sku=payload.sku, ean13=payload.ean13, name=payload.name, stock_qty=payload.stock_qty)
 
 @app.patch("/api/products/{product_id}/stock", response_model=MovementOut, tags=["inventory"])
 def api_adjust_stock(product_id: int, payload: StockAdjust, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
+    # Ajusta la cantidad de stock de un producto y registra el movimiento
     product = get_product(db, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
@@ -55,6 +62,7 @@ def api_adjust_stock(product_id: int, payload: StockAdjust, db: Session = Depend
 # ------- Movimientos -------
 @app.post("/api/movements", response_model=MovementOut, tags=["inventory"])
 def api_create_movement(payload: MovementCreate, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
+    # Registra un movimiento de stock (entrada o salida) para un producto
     product = get_product(db, payload.product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
@@ -64,4 +72,5 @@ def api_create_movement(payload: MovementCreate, db: Session = Depends(get_db), 
 
 @app.get("/api/movements", response_model=list[MovementOut], tags=["inventory"])
 def api_list_movements(product_id: int | None = None, limit: int = 100, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
+    # Lista movimientos de stock, opcionalmente filtrados por producto, con límite de registros
     return list_movements(db, product_id=product_id, limit=limit)
