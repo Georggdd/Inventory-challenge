@@ -26,8 +26,8 @@ Modificar lo que se necesite. Por defecto: usuario `postgres`/`postgres`, db `in
 
 Para habilitar autenticación JWT:
 
-REQUIRE_AUTH=true
-JWT_SECRET=un_secreto_largo
+- REQUIRE_AUTH=true
+- JWT_SECRET=un_secreto_largo
 
 ## 3) Arrancar PostgreSQL con Docker
 ```bash
