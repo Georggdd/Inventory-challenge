@@ -41,19 +41,19 @@ docker compose up -d db
 cd backend
 python -m venv .venv
 ```
-### Activar entorno virtual en Windows
+2. Activar entorno virtual en Windows
 
 ```bash
 source .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Crear tablas y datos de ejemplo (usuarios y productos):
+3. Crear tablas y datos de ejemplo (usuarios y productos):
 
 ```bash
 python -m app.seed
 ```
-### Arrancar el servidor FastAPI:
+4. Arrancar el servidor FastAPI:
 
 ```bash
 uvicorn app.main:app --reload
