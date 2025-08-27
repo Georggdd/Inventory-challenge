@@ -48,12 +48,12 @@ source .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-# Crear tablas y datos de ejemplo (usuarios y productos):
+### Crear tablas y datos de ejemplo (usuarios y productos):
 
 ```bash
 python -m app.seed
 ```
-# Arrancar el servidor FastAPI:
+### Arrancar el servidor FastAPI:
 
 ```bash
 uvicorn app.main:app --reload
@@ -69,7 +69,7 @@ Para comprobar que el backend funciona correctamente, abrir la documentación in
 
 Allí se podrán probar todas las rutas de la API (/api/products, /api/movements, etc.).
 
-# Tests
+<u> Tests <u>
 Ejecutar los tests con:
 
 ```bash
@@ -88,7 +88,7 @@ Vite ejecuta la app en `http://localhost:5173`.
 ## 6) Mini-flujo de prueba de la API (Postman)
 
 
-## Verificar que el servidor está vivo
+### Verificar que el servidor está vivo
 Método: GET
 URL: http://localhost:8000/health
 Body: ninguno
@@ -97,7 +97,7 @@ Respuesta esperada:
 {"status":"ok"}
 
 
-## Obtener token (si auth activada)
+### Obtener token (si auth activada)
 Método: POST
 URL: http://localhost:8000/auth/login
 Body (JSON):
@@ -113,7 +113,7 @@ Respuesta esperada:
 }
 
 
-## Listar productos
+### Listar productos
 Método: GET
 URL: http://localhost:8000/api/products
 Headers:
@@ -123,7 +123,7 @@ Authorization: Bearer <tu_token>
 Respuesta: array con productos existentes.
 
 
-## Crear un producto
+### Crear un producto
 Método: POST
 URL: http://localhost:8000/api/products
 Headers: igual que antes
@@ -138,7 +138,7 @@ Body (JSON):
 Respuesta: producto creado con id.
 
 
-## Ajustar stock
+### Ajustar stock
 Método: PATCH
 URL: http://localhost:8000/api/products/<product_id>/stock
 Body (JSON):
@@ -158,7 +158,7 @@ Respuesta: detalles del movimiento de stock:
 }
 
 
-## Listar movimientos
+### Listar movimientos
 Método: GET
 URL: http://localhost:8000/api/movements
 Respuesta: lista con todos los movimientos de stock.
