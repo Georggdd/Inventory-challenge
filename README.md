@@ -46,9 +46,21 @@ pip install -r requirements.txt
 python -m app.seed
 
 # Arrancar API
+Para arrancar el servidor FastAPI:
+
+```bash
 uvicorn app.main:app --reload
-```
-Por defecto expone en `http://localhost:8000` y docs en `http://localhost:8000/docs`.
+El backend se levanta en http://127.0.0.1:8000/.
+
+⚠️ Nota importante:
+Si accedes a la raíz (/), verás un mensaje de error {"detail": "Not Found"}.
+Esto es normal, ya que no hay ninguna ruta definida en /.
+
+Para comprobar que el backend funciona correctamente, abre la documentación interactiva en:
+
+👉 http://127.0.0.1:8000/docs
+
+Allí podrás probar todas las rutas de la API (/api/products, /api/movements, etc.).
 
 ### Tests 
 ```bash
