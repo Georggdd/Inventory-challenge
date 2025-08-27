@@ -35,26 +35,28 @@ docker compose up -d db
 ```
 
 ## 4) Backend (FastAPI)
-En una terminal:
+1. Entrar en la carpeta del backend e instalar dependencias:
+
 ```bash
 cd backend
 python -m venv .venv
-source .venv\Scripts\activate #Windows
+# Activar entorno virtual en Windows
+source .venv\Scripts\activate
 pip install -r requirements.txt
+Crear tablas y datos de ejemplo (usuarios y productos):
 
-- Crea tablas y datos de ejemplo (usuarios y productos)
+bash
+Copiar código
 python -m app.seed
+Arrancar el servidor FastAPI:
 
-- Arrancar API
-Para arrancar el servidor FastAPI:
-
-```bash
+bash
+Copiar código
 uvicorn app.main:app --reload
 El backend se levanta en http://127.0.0.1:8000/.
 
 ⚠️ Nota importante:
-Si se accede a la raíz (/), saldrá un mensaje de error {"detail": "Not Found"}.
-Esto es normal, ya que no hay ninguna ruta definida en /.
+Si se accede a la raíz (/), aparecerá el mensaje {"detail": "Not Found"}. Esto es normal, ya que no hay ninguna ruta definida en /.
 
 Para comprobar que el backend funciona correctamente, abrir la documentación interactiva en:
 
@@ -62,10 +64,12 @@ Para comprobar que el backend funciona correctamente, abrir la documentación in
 
 Allí se podrán probar todas las rutas de la API (/api/products, /api/movements, etc.).
 
-### Tests 
-```bash
+Tests
+Ejecutar los tests con:
+
+bash
+Copiar código
 pytest -q
-```
 
 ## 5) Frontend (React + Vite)
 En otra terminal:
