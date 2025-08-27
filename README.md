@@ -40,19 +40,24 @@ docker compose up -d db
 ```bash
 cd backend
 python -m venv .venv
+```
 # Activar entorno virtual en Windows
+
+```bash
 source .venv\Scripts\activate
 pip install -r requirements.txt
-Crear tablas y datos de ejemplo (usuarios y productos):
+```
 
-bash
-Copiar código
+# Crear tablas y datos de ejemplo (usuarios y productos):
+
+```bash
 python -m app.seed
-Arrancar el servidor FastAPI:
+```
+# Arrancar el servidor FastAPI:
 
-bash
-Copiar código
+```bash
 uvicorn app.main:app --reload
+```
 El backend se levanta en http://127.0.0.1:8000/.
 
 ⚠️ Nota importante:
@@ -67,9 +72,9 @@ Allí se podrán probar todas las rutas de la API (/api/products, /api/movements
 Tests
 Ejecutar los tests con:
 
-bash
-Copiar código
+```bash
 pytest -q
+```
 
 ## 5) Frontend (React + Vite)
 En otra terminal:
