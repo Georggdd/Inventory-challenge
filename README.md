@@ -208,4 +208,5 @@ inventory-challenge/
 ├─ .env.example
 └─ .env  (lo creas tú)
 ```
+## Autor: Florentina Georgiana Dumitru
 
