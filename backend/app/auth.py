@@ -1,3 +1,8 @@
+"""
+Gestiona la autenticación de usuarios y la generación de tokens JWT.
+Incluye registro, login, verificación de contraseñas y dependencia condicional de autenticación.
+"""
+
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
@@ -54,12 +59,12 @@ def get_current_user(
     return user
 
 def maybe_auth_dependency():
-    # Returns a dependency that enforces auth only if REQUIRE_AUTH=true
+    # Devuelve una dependencia que aplica la autenticación solo si REQUIRE_AUTH=true
     def _noop():
         return None
     return Depends(get_current_user) if REQUIRE_AUTH else Depends(_noop)
 
-# --- Routes helpers ---
+# --- Helpers de rutas ---
 from fastapi import APIRouter
 router = APIRouter(prefix="/auth", tags=["auth"])
 

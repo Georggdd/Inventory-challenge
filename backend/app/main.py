@@ -1,3 +1,7 @@
+"""
+Define la API de inventario: rutas para productos y movimientos, gestión de stock y autenticación.
+"""
+
 import os
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +16,7 @@ from .deps import RequireAuth
 
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173")
 
-# Create tables at startup (for simplicity in testing)
+# Crear tablas al iniciar la aplicación (para mayor simplicidad en las pruebas)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Inventory API", version="0.1.0")
@@ -31,7 +35,7 @@ app.include_router(auth_router)
 def health():
     return {"status": "ok"}
 
-# ------- Products -------
+# ------- Productos -------
 @app.get("/api/products", response_model=list[ProductOut], tags=["inventory"])
 def api_list_products(db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
     return list_products(db)
@@ -48,7 +52,7 @@ def api_adjust_stock(product_id: int, payload: StockAdjust, db: Session = Depend
     movement = set_stock(db, product, quantity=payload.quantity, reason=payload.reason)
     return movement
 
-# ------- Movements -------
+# ------- Movimientos -------
 @app.post("/api/movements", response_model=MovementOut, tags=["inventory"])
 def api_create_movement(payload: MovementCreate, db: Session = Depends(get_db), _auth=Depends(RequireAuth)):
     product = get_product(db, payload.product_id)

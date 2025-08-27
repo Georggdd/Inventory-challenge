@@ -1,3 +1,5 @@
+// Componente principal de la aplicación React que muestra el inventario, movimientos y autenticación.
+
 import React, { useState, useEffect } from "react"
 import InventoryTable from "./components/InventoryTable.jsx"
 import Movements from "./components/Movements.jsx"

@@ -1,3 +1,5 @@
+// Componente React para autenticación de usuario: login, registro y logout.
+
 import React, { useState } from "react"
 import { login, register } from "../api"
 

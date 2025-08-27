@@ -1,3 +1,7 @@
+"""
+Configuración de la base de datos: motor, sesión y dependencias para SQLAlchemy.
+"""
+
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase

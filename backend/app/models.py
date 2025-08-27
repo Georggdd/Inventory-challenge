@@ -1,3 +1,7 @@
+"""
+Define los modelos de la base de datos: usuarios, productos y movimientos de stock.
+"""
+
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship, Mapped, mapped_column
@@ -32,7 +36,7 @@ class StockMovement(Base):
     qty_before: Mapped[int] = mapped_column(Integer, nullable=False)
     qty_after: Mapped[int] = mapped_column(Integer, nullable=False)
     reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    type: Mapped[str] = mapped_column(String(16), nullable=False)  # IN / OUT / ADJUST
+    type: Mapped[str] = mapped_column(String(16), nullable=False)  # IN / OUT / Ajustes
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     product: Mapped["Product"] = relationship(back_populates="movements")

@@ -59,8 +59,8 @@ pytest -q
 En otra terminal:
 ```bash
 cd frontend
-pnpm install  # o: npm install
-pnpm dev      # o: npm run dev
+npm install
+npm run dev
 ```
 Vite sirve la app en `http://localhost:5173`.
 

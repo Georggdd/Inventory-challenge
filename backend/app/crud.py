@@ -1,3 +1,8 @@
+"""
+Gestiona la autenticación de usuarios y la generación de tokens JWT.
+Incluye registro, login, verificación de contraseñas y dependencia condicional de autenticación.
+"""
+
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from .models import Product, StockMovement

@@ -1,7 +1,11 @@
+"""
+Define los esquemas (Pydantic) para validar datos de usuarios, productos y movimientos de stock.
+"""
+
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field, field_validator, EmailStr
 
-# ---------- Auth ----------
+# ---------- Autentificación ----------
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -18,7 +22,7 @@ class UserOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ---------- Products ----------
+# ---------- Productos ----------
 class ProductBase(BaseModel):
     sku: str = Field(min_length=1, max_length=64)
     ean13: str = Field(min_length=13, max_length=13)
@@ -46,7 +50,7 @@ class ProductOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ---------- Movements ----------
+# ---------- Movimientos ----------
 class MovementCreate(BaseModel):
     product_id: int
     delta: int
@@ -65,7 +69,7 @@ class MovementOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ---------- Adjust ----------
+# ---------- Ajustes ----------
 class StockAdjust(BaseModel):
     quantity: int = Field(ge=0)
     reason: str | None = None

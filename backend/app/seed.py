@@ -1,4 +1,5 @@
 """Pequeño script de seed para crear tablas y datos de ejemplo."""
+
 import os
 from sqlalchemy.orm import Session
 

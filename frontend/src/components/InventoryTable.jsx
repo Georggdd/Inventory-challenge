@@ -1,3 +1,5 @@
+// Componente React que muestra y gestiona el inventario, permitiendo ajustar stock y registrar movimientos.
+
 import React, { useEffect, useState } from "react"
 import { apiGet, apiPatch, apiPost } from "../api"
 

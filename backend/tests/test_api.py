@@ -1,24 +1,35 @@
+"""
+Pruebas automatizadas (pytest) de la API de inventario usando FastAPI TestClient y una base de datos SQLite en memoria.
+"""
+
+import sys
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from app.main import app
 from app.database import Base, get_db
 
-# Usamos SQLite en memoria para tests
-TEST_DB_URL = "sqlite+pysqlite:///:memory:"
+# SQLite en memoria compartida entre hilos con StaticPool
+TEST_DB_URL = "sqlite:///:memory:"
 
-engine = create_engine(TEST_DB_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    TEST_DB_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool  # <- clave para que TestClient vea las tablas
+)
+
 TestingSessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
-@pytest.fixture(autouse=True)
-def setup_db():
-    Base.metadata.create_all(bind=engine)
-    yield
-    Base.metadata.drop_all(bind=engine)
+# Crear todas las tablas antes de tests
+Base.metadata.create_all(bind=engine)
 
+# Sobrescribir la dependencia get_db de FastAPI
 def override_get_db():
     db = TestingSessionLocal()
     try:
@@ -27,7 +38,16 @@ def override_get_db():
         db.close()
 
 app.dependency_overrides[get_db] = override_get_db
+
 client = TestClient(app)
+
+@pytest.fixture(autouse=True)
+def cleanup_db():
+    # Limpiar la BD después de cada test
+    yield
+    # Opcional: si se quieren resetear datos entre tests:
+    # Base.metadata.drop_all(bind=engine)
+    # Base.metadata.create_all(bind=engine)
 
 def test_health():
     r = client.get("/health")

@@ -1,3 +1,5 @@
+// Componente React para mostrar y filtrar el historial de movimientos de inventario.
+
 import React, { useEffect, useState } from "react"
 import { apiGet } from "../api"
 

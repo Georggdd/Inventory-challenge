@@ -1,3 +1,7 @@
+"""
+Script de prueba para verificar la conexión a la base de datos PostgreSQL.
+"""
+
 import psycopg2
 
 try:
