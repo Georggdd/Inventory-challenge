@@ -1,0 +1,26 @@
+# Entornos virtuales
+venv/
+.env/
+__pycache__/
+
+# Archivos de Python
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de VSCode
+.vscode/
+*.code-workspace
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Dependencias de Node
+node_modules/
+dist/
+build/
+
+# Docker
+*.pid
+*.log
